@@ -23,12 +23,22 @@ rl.on('line', (line) => {
 rl.on("close", ContestResponse); 
 
 function ContestResponse(){
-	//implement your code here using input array
+	let result = 0;
 	for (let i=0; i < input.length; i++) {
-
-		
-		
+		result += countNecessaryFuel(+input[i]);
 	}
+	console.log(result);
+}
 
 
+function countNecessaryFuel(mass) {
+	let j = mass / 3;
+	j = Math.floor(j);
+	j = j - 2;
+	if (j <= 0) {
+		return 0;
+	} else {
+		return j + countNecessaryFuel(j);
+	}
+	
 }
