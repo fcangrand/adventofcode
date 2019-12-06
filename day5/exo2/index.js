@@ -1,4 +1,5 @@
 const fileName = process.argv[2];
+const inputNumber = +process.argv[3];
 const input = [];
 
 const fs = require('fs');
@@ -18,8 +19,9 @@ rl.on("close", ContestResponse);
 
 function ContestResponse() {
   const tab = input[0].split(',').map(x => +x);
-  const result = calculateIntCode(tab, 1);	
-
+  
+  const result = calculateIntCode(tab, inputNumber);
+  	
   console.log('sortie', result);
 }
 
@@ -37,7 +39,6 @@ function calculateIntCode(tab, p_input) {
 		const l = sNumber.length;
 		const opcode = sNumber.substring(l-2, l);
 		const arr = sNumber.split("").reverse().splice(2);
-		
 		
 		if (tab[i] === 99) {
 			console.log('break ', lastInstructionWasOutput);
@@ -72,6 +73,42 @@ function calculateIntCode(tab, p_input) {
 			i += 4;
 			lastInstructionWasOutput = false;
 		}
+		else if (opcode === '05') {
+			const a = arr[0] === '1' ? tab[i+1] : tab[tab[i+1]];
+			const b = arr[1] === '1' ? tab[i+2] : tab[tab[i+2]];				
+			if (a !== 0) {
+			  i = b;	
+			} else {
+			  i += 3;	
+			}
+			lastInstructionWasOutput = false;
+		}
+		else if (opcode === '06') {
+			const a = arr[0] === '1' ? tab[i+1] : tab[tab[i+1]];
+			const b = arr[1] === '1' ? tab[i+2] : tab[tab[i+2]];				
+			if (a === 0) {
+			  i = b;	
+			} else {
+			  i += 3;	
+			}
+			lastInstructionWasOutput = false;
+		}
+		else if (opcode === '07') {
+			const pos = tab[i+3];
+			const a = arr[0] === '1' ? tab[i+1] : tab[tab[i+1]];
+			const b = arr[1] === '1' ? tab[i+2] : tab[tab[i+2]];
+			tab[pos] = a < b ? 1 : 0;
+			i += 4;
+			lastInstructionWasOutput = false;
+		}
+		else if (opcode === '08') {
+			const pos = tab[i+3];
+			const a = arr[0] === '1' ? tab[i+1] : tab[tab[i+1]];
+			const b = arr[1] === '1' ? tab[i+2] : tab[tab[i+2]];				
+			tab[pos] = a === b ? 1 : 0;
+			i += 4;
+			lastInstructionWasOutput = false;
+		}
 		else {
 			console.error("Something went wrong :( at position: ", i);
 			console.error("With value ", tab[i]);
@@ -79,11 +116,8 @@ function calculateIntCode(tab, p_input) {
 		}	
 	}
 	
-	if (lastInstructionWasOutput) {
-		return output;
-	} else {
-		return null;
-	}
+	return output;
+	
 	
 }
 
