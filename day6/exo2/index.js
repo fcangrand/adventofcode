@@ -30,11 +30,22 @@ function ContestResponse() {
 	 if (!allNodes[child]) {
 		 allNodes[child] = [];
 	 }
-	 allNodes[father].push(child);
+	 allNodes[child].push(father);
   });
  
-  ajoutProfondeur(allNodes['COM'], 1, allNodes);
-  console.log(sumDepth);
+  // ajoutProfondeur(allNodes['COM'], 1, allNodes);
+  const cheminYou = cheminParent('YOU', allNodes);
+  const cheminSan = cheminParent('SAN', allNodes);
+
+  let i = 0;
+  while(cheminYou[i] === cheminSan[i]) {
+	  i++;
+  }
+  
+  const nbYouRestant = cheminYou.length - i;
+  const nbSanRestant = cheminSan.length - i;
+  
+  console.log(nbYouRestant + nbSanRestant);
 }
 
 function ajoutProfondeur(children, depth, allNodes) {
@@ -44,3 +55,14 @@ function ajoutProfondeur(children, depth, allNodes) {
 	});
 }
 
+function cheminParent(feuille, allNodes) {
+	const result = [];
+	let node = feuille;
+	while (node) {
+		node = allNodes[node][0];	
+		if (node) {
+			result.push(node);
+		}
+	}
+	return result.reverse();
+}
