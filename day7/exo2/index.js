@@ -19,36 +19,48 @@ rl.on("close", ContestResponse);
 let maxResult = 0;
 let arrayResult = [];
 const nbAmplifiers = 5;
-const nbLoopMax = 2;
+const nbLoopMax = 5;
 
 function ContestResponse() {
     const tab = input[0].split(',').map(x => +x);
-	calculatePath(tab, 0, [], 0, 0);
+	calculatePath(tab, 0, [], 0, 1);
     console.log('sortie ', arrayResult + ' max: ' + maxResult);
 }
 
 function calculatePath(p_tab, p_input2, p_alreadyChecked, depth, loop) {
-	for (let i = loop*nbAmplifiers; i < (1+loop)*nbAmplifiers; i++) {
-		if (p_alreadyChecked.indexOf(i) === -1) {
-			const alreadyChecked = [...p_alreadyChecked];
-			alreadyChecked.push(i);
-			const result = calculateIntCode(p_tab, i, p_input2);
-			if (loop === 1) {
-				console.log(loop + "," + depth + ", " + result + "/" + alreadyChecked);
-			}
-			if (depth === (nbAmplifiers - 1) && (loop + 1 === nbLoopMax) && (maxResult < result)) {
-				console.log("allo");
-				maxResult = result;
-				arrayResult=[...alreadyChecked];
-			}
-			else if (depth === (nbAmplifiers - 1) && (loop === 0)) {
-				calculatePath(p_tab, result, [], 0, loop+1);
-			} 
-			else {
-				calculatePath(p_tab, result, alreadyChecked, depth+1, loop);
-			}
-		}
-	}
+    if (loop === 1) {
+        for (let i = nbAmplifiers; i < 2*nbAmplifiers; i++) {
+            if (p_alreadyChecked.indexOf(i) === -1) {
+                const alreadyChecked = [...p_alreadyChecked];
+                alreadyChecked.push(i);
+                const result = calculateIntCode(p_tab, i, p_input2);
+                console.log(result);
+                if (depth === (nbAmplifiers - 1)) {
+                    calculatePath(p_tab, result, alreadyChecked, 0, loop + 1);
+                } else {
+                    calculatePath(p_tab, result, alreadyChecked, depth + 1, loop);
+                }
+            }
+        }
+	} else if (loop > 1) {
+        const alreadyChecked = [...p_alreadyChecked];
+        const result = calculateIntCode(p_tab, p_alreadyChecked[depth], p_input2);
+        if (loop === 2) {
+            // console.log(loop + "," + depth + ", " + result + "/" + p_alreadyChecked);
+        }
+        if (depth === (nbAmplifiers - 1) ) {
+            if  (maxResult < result) {
+                console.log("allo");
+                maxResult = result;
+                arrayResult = [...alreadyChecked];
+            }
+            if (!(loop === nbLoopMax)) {
+                calculatePath(p_tab, result, alreadyChecked, 0, loop + 1);
+            }
+        } else {
+            calculatePath(p_tab, result, alreadyChecked, depth+1, loop);
+        }
+    }
 }
 
 function calculateIntCode(p_tab, p_input1, p_input2) {
