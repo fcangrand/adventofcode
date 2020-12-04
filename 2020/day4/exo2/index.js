@@ -71,12 +71,6 @@ function is_password_valid(valid_prefix, str_password) {
         verified_prefix.push(key);
     });
 
-    // Keep cid optional
-    if ((verified_prefix.length != valid_prefix.length) ||
-        (verified_prefix.length === valid_prefix.length && valid_prefix[0][0] !== "cid" )) {
-        is_valid = false;
-    }
-
     return (verified_prefix.length === valid_prefix.length) ||
            (verified_prefix.length === valid_prefix.length - 1 && !verified_prefix.includes("cid"));
 }
