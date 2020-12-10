@@ -37,12 +37,12 @@ function calculate_adapters(input) {
     while (i < length) {
         let j = i;
 
-        while (j != length -1 & input[j+1] - input[j] === 1) {
+        while (j != length -1 && input[j+1] - input[j] === 1) {
             j++;
         }
 
         if (i !== j) {
-            const nb_min = Math.max(0, (j - 1) - i - 2);
+            const nb_min = Math.max(0, (j - i - 3));
             can_be_removed *= (Math.pow(2, j - i - 1) - nb_min);
         }
 
