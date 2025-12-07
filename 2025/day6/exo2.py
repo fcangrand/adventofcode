@@ -1,4 +1,3 @@
-import re
 from functools import reduce
 
 score = 0
